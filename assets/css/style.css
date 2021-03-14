@@ -1,0 +1,59 @@
+body {
+  background: #f4f4f4;
+  color: #61686e;
+}
+h1 {
+  color: #b0b0b0;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+}
+a {
+  color: #6194cb;
+  transition: all 0.25s ease-in-out;
+}
+a:hover {
+  color: #4b75a2;
+}
+.container {
+  max-width: 640px
+}
+header.container {
+  margin-top: 2rem;
+}
+footer.container {
+  margin-bottom: 2rem;
+}
+#form {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  padding-bottom: 0;
+  margin: 2rem 0
+}
+.form-group {
+  margin-bottom: 2rem
+}
+.form-group label {
+  font-weight: 500;
+}
+.form-control:focus {
+  border-color: #c7c5d6;
+  box-shadow: inset 0 0 5px rgb(0 0 0 / 20%)
+}
+#hasil > div {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  box-shadow: inset 0 0 10px rgb(0 0 0 / 30%);
+}
+#hasil > div:last-child {
+  margin-bottom: 2rem;
+}
+#hasil > div p {
+  opacity: 0.9;
+  margin-bottom: 0.4rem;
+}
+#hasil > div h3 {
+  opacity: 0.95;
+}
