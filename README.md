@@ -88,4 +88,4 @@ Proyek ini awalnya dibuat untuk tutorial [Membuat kalkulator untuk menghitung be
 
 ## Lisensi
 
-[MIT](LICENSE) © Regga Rantai
+[MIT](LICENSE) © Regga Rantai · [PT Hibrida Rekainovasi Nusantara](https://hiravta.co.id)
