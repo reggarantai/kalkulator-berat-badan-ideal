@@ -42,9 +42,14 @@ small {
   font-size: 80%;
 }
 input,
-select {
+select,
+button {
   margin: 0;
   font: inherit;
+}
+/* Supaya atribut hidden tetap menang atas display dari class */
+[hidden] {
+  display: none !important;
 }
 
 /* Tata letak */
@@ -154,6 +159,27 @@ select {
   margin-top: 0.25rem;
 }
 
+/* Kolom opsional dan pengaturan lanjutan */
+.grup > legend {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.opsional {
+  font-weight: normal;
+}
+.grup > .kolom:last-child,
+.pengaturan > .kolom:last-child {
+  margin-bottom: 0;
+}
+.pengaturan > summary {
+  color: #3b6593;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pengaturan[open] > summary {
+  margin-bottom: 1.5rem;
+}
+
 /* Kartu hasil */
 .hasil-kartu {
   border: 1px solid #ccc;
@@ -198,6 +224,47 @@ select {
 }
 .catatan {
   margin-bottom: 0.5rem;
+}
+
+/* Tombol bagikan */
+.bagikan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.bagikan .bantuan {
+  flex-basis: 100%;
+  margin: 0;
+}
+.tombol {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #fff;
+  background: #117a8b;
+  border: 1px solid #117a8b;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+.tombol:hover {
+  color: #fff;
+  background: #0d6170;
+}
+.tombol--kedua {
+  color: #117a8b;
+  background: #fff;
+}
+.tombol--kedua:hover {
+  color: #0d6170;
+  background: #e9ecef;
+}
+.tombol:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(17 122 139 / 50%);
 }
 
 @keyframes muncul {

@@ -1,17 +1,22 @@
 # Kalkulator Berat Badan Ideal
 
-Kalkulator berat badan ideal untuk orang dewasa Indonesia. Rentang IMT-nya mengikuti standar Kemenkes 2025 (klasifikasi Asia-Pasifik), lengkap dengan perbandingan enam rumus klasik: Devine, Robinson, Miller, Hamwi, Lemmens, dan Broca.
+Kalkulator berat badan ideal untuk orang dewasa Indonesia, lengkap dengan status IMT, target yang realistis, dan kebutuhan kalori. Standarnya mengikuti pedoman Kemenkes 2025 (klasifikasi Asia-Pasifik), dengan enam rumus klasik sebagai pembanding: Devine, Robinson, Miller, Hamwi, Lemmens, dan Broca.
 
 **Coba langsung:** https://reggarantai.github.io/kalkulator-berat-badan-ideal/
 
-<img src="docs/screenshot.png" width="420" alt="Tampilan kalkulator: perempuan 28 tahun, tinggi 155 cm, berat ideal 44,5–55 kg menurut standar Kemenkes 2025">
+<img src="docs/screenshot.png" width="420" alt="Tampilan kalkulator: perempuan 28 tahun, tinggi 155 cm, berat 58 kg. Berat ideal 44,5–55 kg, status berat badan lebih, kebutuhan kalori, dan lingkar pinggang">
 
 ## Fitur
 
 - **Standar IMT Kemenkes 2025** (normal 18,5–22,9) sebagai bawaan, dengan WHO global (18,5–24,9) sebagai pilihan.
+- **Status dan target.** Isi berat badan untuk melihat kategori IMT, berapa kg menuju rentang normal, dan perkiraan waktunya.
+- **Kebutuhan kalori** harian dan saran asupan untuk menurunkan berat, dengan batas minimum yang aman.
+- **Lingkar pinggang** untuk mengecek obesitas sentral dengan batas Asia-Pasifik.
 - **Enam rumus klasik**, masing-masing dengan IMT setaranya. Hasil yang jatuh di luar rentang normal diberi tanda.
 - **Tidak memaksakan rumus.** Devine, Robinson, Miller, dan Hamwi hanya terdefinisi untuk tinggi 152,4 cm (5 kaki) ke atas, jadi tidak dipakai di bawah itu.
 - **Cek umur.** Di bawah 18 tahun diarahkan ke standar antropometri anak; di atas 65 tahun diberi catatan khusus.
+- **Bagikan.** Tombol WhatsApp hanya mengirim rentang berat ideal. "Salin link hasil" menyimpan isian di fragmen URL (`#…`), yang tidak pernah dikirim ke server.
+- **Bisa di-install dan dipakai offline** sebagai PWA.
 - **Privat.** Semua dihitung di browser; data yang diisi tidak dikirim ke mana pun.
 - **Tanpa dependency.** HTML, CSS, dan JavaScript murni, tanpa framework, CDN, maupun build.
 
@@ -39,6 +44,17 @@ Sumber: [KMK No. HK.01.07/MENKES/509/2025](https://keslan.kemkes.go.id/unduhan/K
 
 Hasil Hamwi berlaku untuk rangka tubuh sedang; kurangi 10% untuk rangka kecil dan tambah 10% untuk rangka besar.
 
+## Status, target, dan kalori
+
+| Bagian | Cara hitung | Sumber |
+|---|---|---|
+| Target awal (obesitas) | Turun 5–10% berat badan dalam 6 bulan pertama | KMK 509/2025 |
+| Perkiraan waktu | Laju realistis 0,5–1 kg per minggu | KMK 509/2025 |
+| Kebutuhan kalori | BMR Harris-Benedict revisi × faktor aktivitas (1,2–1,9) | Roza & Shizgal, *Am J Clin Nutr*, 1984; KMK 509/2025 memakai Harris-Benedict |
+| Kalori untuk turun berat | Kebutuhan harian dikurangi 500 kkal, tidak di bawah 1.200 kkal (perempuan) atau 1.500 kkal (laki-laki) | KMK 509/2025; [Harvard Health Publishing, 2024](https://www.health.harvard.edu/staying-healthy/calorie-counting-made-easy) |
+| Aktivitas fisik | Aerobik intensitas sedang minimal 150 menit per minggu, latihan beban 2–3 kali per minggu | KMK 509/2025, Tabel 3.10 |
+| Obesitas sentral | Lingkar pinggang > 90 cm (laki-laki) atau > 80 cm (perempuan) | KMK 509/2025, Tabel 3.2 |
+
 ## Batasan
 
 Hasilnya perkiraan untuk orang dewasa, bukan diagnosis. Tidak berlaku untuk ibu hamil atau menyusui, orang berotot besar, dan kondisi medis tertentu. Konsultasikan dengan dokter atau ahli gizi.
@@ -49,9 +65,12 @@ Tidak ada dependency dan tidak perlu build. Buka `index.html` langsung di browse
 
 ```
 index.html            halaman kalkulator
+manifest.webmanifest  manifest PWA
+sw.js                 service worker untuk mode offline
 assets/css/style.css  tampilan
 assets/js/rumus.js    rumus dan logika murni (tanpa DOM), bisa dipakai ulang
 assets/js/script.js   interaksi form
+assets/img/           ikon dan gambar pratinjau link (OG)
 tests/                unit test (node:test)
 ```
 

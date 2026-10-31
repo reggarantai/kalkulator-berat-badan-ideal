@@ -1,11 +1,15 @@
 // Author: Regga @reggarantai
-// https://reggarantai.com
+// https://hiravta.co.id
 
 (function () {
   'use strict';
 
   const form = document.getElementById('form');
   const hasil = document.getElementById('hasil');
+  const pengaturan = document.getElementById('pengaturan');
+  const bagikan = document.getElementById('bagikan');
+  const tautanWA = document.getElementById('bagikan-wa');
+  const statusSalin = document.getElementById('status-salin');
   let terakhir = '';
   let jeda;
 
@@ -29,15 +33,25 @@
     perbarui(true);
   });
 
-  // Nilai form bisa dipulihkan browser setelah reload
-  perbarui(false);
+  document.getElementById('salin-tautan').addEventListener('click', salinTautan);
+
+  // Isi form dari link hasil kalau ada; kalau tidak, pakai nilai yang dipulihkan browser
+  perbarui(isiDariTautan());
+
+  // Simpan halaman supaya kalkulator tetap bisa dibuka tanpa internet
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('sw.js');
+  }
 
   // tegas = tampilkan pesan kesalahan walau user mungkin masih mengetik
   function perbarui(tegas) {
-    const html = susunHasil(bacaForm(), tegas);
+    const data = bacaForm();
+    perbaruiBagikan(data);
+    const html = susunHasil(data, tegas);
     if (html === terakhir) return;
     terakhir = html;
     hasil.innerHTML = html;
+    statusSalin.textContent = '';
   }
 
   function bacaForm() {
@@ -46,12 +60,62 @@
       pria: el.gender.value === 'pria',
       umur: el.umur.valueAsNumber,
       tinggi: el.tinggi.valueAsNumber,
+      berat: el.berat.valueAsNumber,
+      pinggang: el.pinggang.valueAsNumber,
+      aktivitas: el.aktivitas.value,
+      namaAktivitas: el.aktivitas.selectedOptions[0].text,
       rumus: el.formula.value,
       standar: el.standar.value,
     };
   }
 
-  function susunHasil({ pria, umur, tinggi, rumus, standar }, tegas) {
+  // Link hasil memuat data di fragmen (#jk=p&umur=28...). Mengembalikan true kalau ada datanya.
+  function isiDariTautan() {
+    const data = Rumus.dariTautan(location.hash);
+    if (!Object.keys(data).length) return false;
+    const el = form.elements;
+    if ('pria' in data) el.gender.value = data.pria ? 'pria' : 'wanita';
+    ['umur', 'tinggi', 'berat', 'pinggang'].forEach((kunci) => {
+      if (kunci in data) el[kunci].value = data[kunci];
+    });
+    if (data.aktivitas) el.aktivitas.value = data.aktivitas;
+    if (data.rumus) el.formula.value = data.rumus;
+    if (data.standar) el.standar.value = data.standar;
+    if (data.rumus || data.standar) pengaturan.open = true;
+    // Form sudah terisi, jadi data tidak perlu tertinggal di address bar
+    history.replaceState(null, '', location.pathname + location.search);
+    return true;
+  }
+
+  function alamatDasar() {
+    return location.href.split('#')[0];
+  }
+
+  // Pesan WhatsApp hanya memuat rentang berat ideal, bukan berat atau umur
+  function perbaruiBagikan({ tinggi, umur, standar }) {
+    const siap = Rumus.tinggiValid(tinggi) && ['dewasa', 'lansia'].includes(Rumus.kelompokUmur(umur));
+    bagikan.hidden = !siap;
+    if (!siap) return;
+    const { min, maks } = Rumus.rentangIMT(tinggi, standar);
+    const teks =
+      `Berat idealku menurut standar IMT ${Rumus.STANDAR[standar].nama}: ` +
+      `${Rumus.kg(min, 'atas')}–${Rumus.kg(maks, 'bawah')} kg. Cek punyamu: ${alamatDasar()}`;
+    tautanWA.href = `https://wa.me/?text=${encodeURIComponent(teks)}`;
+  }
+
+  async function salinTautan() {
+    const tautan = `${alamatDasar()}#${Rumus.keTautan(bacaForm())}`;
+    try {
+      await navigator.clipboard.writeText(tautan);
+      statusSalin.textContent =
+        'Link disalin. Link ini memuat data yang kamu isi, jadi bagikan hanya ke orang yang kamu percaya.';
+    } catch {
+      statusSalin.textContent = `Salin link ini: ${tautan}`;
+    }
+  }
+
+  function susunHasil(d, tegas) {
+    const { pria, umur, tinggi, rumus, standar } = d;
     const { min, maks } = Rumus.BATAS_TINGGI;
 
     // Biarkan kosong selama tinggi belum selesai diketik
@@ -83,10 +147,11 @@
       );
     }
 
+    const pribadi = kartuPribadi(d, tegas);
     if (rumus === 'imt') {
-      kartu.push(kartuIMT(tinggi, standar));
+      kartu.push(kartuIMT(tinggi, standar), ...pribadi);
     } else if (rumus === 'semua') {
-      kartu.push(kartuIMT(tinggi, standar));
+      kartu.push(kartuIMT(tinggi, standar), ...pribadi);
       const semua = Rumus.RUMUS.map((r) => Rumus.hitung(r.id, tinggi, pria, standar));
       semua.filter((h) => h.berlaku).forEach((h) => kartu.push(kartuRumus(h, standar)));
       // Rumus yang tidak berlaku cukup disebut sekali, tidak perlu satu kartu per rumus
@@ -97,8 +162,32 @@
       kartu.push(kartuRumus(h, standar));
       // Kalau rumusnya tidak cocok, tunjukkan acuan yang dianjurkan
       if (!h.berlaku || !h.normal) kartu.push(kartuIMT(tinggi, standar));
+      kartu.push(...pribadi);
     }
     return kartu.join('');
+  }
+
+  // Kartu dari kolom opsional: berat badan dan lingkar pinggang
+  function kartuPribadi(d, tegas) {
+    // Seperti tinggi, angka yang masih diketik belum dianggap salah
+    const diisi = (nilai, batas) => !Number.isNaN(nilai) && (tegas || nilai >= batas.min);
+    const kartu = [];
+
+    if (diisi(d.berat, Rumus.BATAS_BERAT)) {
+      kartu.push(
+        ...(Rumus.beratValid(d.berat)
+          ? [kartuStatus(d), kartuKalori(d)]
+          : [pesan(`Masukkan berat badan antara ${Rumus.BATAS_BERAT.min} dan ${Rumus.BATAS_BERAT.maks} kg.`)])
+      );
+    }
+    if (diisi(d.pinggang, Rumus.BATAS_PINGGANG)) {
+      kartu.push(
+        Rumus.pinggangValid(d.pinggang)
+          ? kartuPinggang(d.pinggang, d.pria)
+          : pesan(`Masukkan lingkar pinggang antara ${Rumus.BATAS_PINGGANG.min} dan ${Rumus.BATAS_PINGGANG.maks} cm.`)
+      );
+    }
+    return kartu;
   }
 
   function pesan(teks) {
@@ -110,6 +199,10 @@
     return `${Rumus.angkaIMT(min)}–${Rumus.angkaIMT(maks)}`;
   }
 
+  function rentang([dari, sampai]) {
+    return dari === sampai ? `${dari}` : `${dari}–${sampai}`;
+  }
+
   function kartuIMT(tinggi, standar) {
     const { min, maks } = Rumus.rentangIMT(tinggi, standar);
     return `
@@ -118,6 +211,77 @@
         <p class="hasil-utama">Berat idealmu antara <strong>${Rumus.kg(min, 'atas')}</strong>
           dan <strong>${Rumus.kg(maks, 'bawah')} kg</strong></p>
         <p>Setara IMT ${rentangNormal(standar)}.</p>
+      </div>`;
+  }
+
+  function kartuStatus({ berat, tinggi, standar }) {
+    const nilai = Rumus.imt(berat, tinggi);
+    const kategori = Rumus.kategoriIMT(nilai, standar);
+    const t = Rumus.target(berat, tinggi, standar);
+
+    let saran = '<p>Beratmu sudah dalam rentang normal. Pertahankan.</p>';
+    if (t.arah === 'turun') {
+      saran = `<p>Untuk masuk rentang normal, turunkan <strong>±${Rumus.angka(t.selisih)} kg</strong>
+          (ke ${Rumus.angka(t.batas)} kg atau kurang). Dengan laju realistis 0,5–1 kg per minggu,
+          itu butuh sekitar ${rentang(t.minggu)} minggu.</p>`;
+      if (t.awal) {
+        saran += `<p>Target awal yang dianjurkan: turun 5–10% berat badan
+            (${Rumus.kg(t.awal[0])}–${Rumus.kg(t.awal[1])} kg) dalam 6 bulan pertama.</p>`;
+      }
+    } else if (t.arah === 'naik') {
+      saran = `<p>Untuk masuk rentang normal, naikkan <strong>±${Rumus.angka(t.selisih)} kg</strong>
+          (ke ${Rumus.angka(t.batas)} kg atau lebih). Konsultasikan dengan dokter atau ahli gizi.</p>`;
+    }
+
+    return `
+      <div class="hasil-kartu hasil-kartu--${kategori.id === 'normal' ? 'utama' : 'peringatan'}">
+        <h2>Status berat badanmu · ${Rumus.STANDAR[standar].nama}</h2>
+        <p class="hasil-utama">IMT ${Rumus.angkaIMT(nilai)}: <strong>${kategori.nama}</strong></p>
+        ${saran}
+      </div>`;
+  }
+
+  function kartuKalori({ berat, tinggi, umur, pria, aktivitas, namaAktivitas, standar }) {
+    if (!aktivitas) return pesan('Pilih aktivitas harian untuk melihat kebutuhan kalorimu.');
+    const k = Rumus.kalori(berat, tinggi, umur, pria, aktivitas);
+    const arah = Rumus.target(berat, tinggi, standar).arah;
+
+    let saran = '';
+    if (arah === 'turun') {
+      if (k.turun >= k.harian) {
+        saran = `<p>Kebutuhanmu sudah dekat batas asupan minimum (${Rumus.kkal(k.minimum)} kkal), jadi
+            mengurangi makan saja tidak dianjurkan. Konsultasikan dengan ahli gizi.</p>`;
+      } else if (k.dibatasi) {
+        saran = `<p>Untuk menurunkan berat: <strong>±${Rumus.kkal(k.turun)} kkal per hari</strong>. Ini batas
+            minimum asupan tanpa pengawasan tenaga kesehatan; kejar sisa defisitnya lewat aktivitas fisik.</p>`;
+      } else {
+        saran = `<p>Untuk menurunkan berat: <strong>±${Rumus.kkal(k.turun)} kkal per hari</strong>
+            (asupan dikurangi 500 kkal, sesuai KMK 509/2025).</p>`;
+      }
+      saran += `<p>Tambah olahraga aerobik intensitas sedang minimal 150 menit per minggu (misalnya
+          30 menit, 5 kali seminggu) dan latihan beban 2–3 kali per minggu.</p>`;
+    } else if (arah === 'naik') {
+      saran = '<p>Untuk menaikkan berat, asupanmu perlu di atas angka ini. Konsultasikan dengan ahli gizi.</p>';
+    }
+
+    return `
+      <div class="hasil-kartu hasil-kartu--info">
+        <h2>Kebutuhan kalori</h2>
+        <p class="hasil-utama">±${Rumus.kkal(k.harian)} kkal per hari</p>
+        <p>Untuk mempertahankan berat sekarang, dengan aktivitas ${namaAktivitas.toLowerCase()}.</p>
+        ${saran}
+      </div>`;
+  }
+
+  function kartuPinggang(pinggang, pria) {
+    const batas = pria ? Rumus.BATAS_SENTRAL.pria : Rumus.BATAS_SENTRAL.wanita;
+    const sentral = Rumus.obesitasSentral(pinggang, pria);
+    return `
+      <div class="hasil-kartu hasil-kartu--${sentral ? 'peringatan' : 'utama'}">
+        <h2>Lingkar pinggang</h2>
+        <p class="hasil-utama">${Rumus.angka(pinggang)} cm: <strong>${sentral ? 'obesitas sentral' : 'di bawah batas'}</strong></p>
+        <p>Batas untuk ${pria ? 'laki-laki' : 'perempuan'} Asia adalah ${batas} cm (KMK 509/2025).
+          ${sentral ? 'Lemak perut berlebih menjadi penanda risiko penyakit jantung dan metabolik.' : ''}</p>
       </div>`;
   }
 

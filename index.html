@@ -4,12 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kalkulator Berat Badan Ideal (Standar Kemenkes 2025)</title>
-    <meta name="description" content="Hitung berat badan ideal sesuai standar IMT Kemenkes 2025 (Asia-Pasifik), lalu bandingkan dengan rumus Devine, Robinson, Miller, Hamwi, Lemmens, dan Broca.">
+    <meta name="description" content="Hitung berat badan ideal, status IMT, dan kebutuhan kalori sesuai standar Kemenkes 2025 (Asia-Pasifik). Gratis, tanpa daftar, data tidak dikirim ke server.">
+    <link rel="canonical" href="https://reggarantai.github.io/kalkulator-berat-badan-ideal/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
+    <meta property="og:url" content="https://reggarantai.github.io/kalkulator-berat-badan-ideal/">
     <meta property="og:title" content="Kalkulator Berat Badan Ideal (Standar Kemenkes 2025)">
-    <meta property="og:description" content="Hitung berat badan ideal sesuai standar IMT Kemenkes 2025, lengkap dengan perbandingan enam rumus klasik.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+    <meta property="og:description" content="Hitung berat badan ideal, status IMT, dan kebutuhan kalori sesuai standar Kemenkes 2025.">
+    <meta property="og:image" content="https://reggarantai.github.io/kalkulator-berat-badan-ideal/assets/img/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Kalkulator Berat Badan Ideal, sesuai standar IMT Kemenkes 2025">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#117a8b">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="assets/img/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/img/ikon-180.png">
     <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
   </head>
   <body>
@@ -39,36 +49,81 @@
             <span class="satuan" id="tinggi-satuan">cm</span>
           </div>
         </div>
-        <div class="kolom">
-          <label for="formula">Pilih rumus:</label>
-          <select id="formula" name="formula">
-            <option value="imt">Rentang IMT (dianjurkan)</option>
-            <option value="devine">Rumus Devine</option>
-            <option value="robinson">Rumus Robinson</option>
-            <option value="miller">Rumus Miller</option>
-            <option value="hamwi">Rumus Hamwi</option>
-            <option value="lemmens">Rumus Lemmens</option>
-            <option value="broca">Rumus Broca</option>
-            <option value="semua">Semua rumus</option>
-          </select>
-        </div>
-        <div class="kolom">
-          <label for="standar">Standar IMT:</label>
-          <select id="standar" name="standar" aria-describedby="standar-info">
-            <option value="kemenkes2025">Kemenkes 2025</option>
-            <option value="who">WHO global</option>
-          </select>
-          <small id="standar-info" class="bantuan">
-            Kemenkes 2025 memakai klasifikasi Asia-Pasifik (IMT normal 18,5–22,9) dari pedoman tata laksana
-            obesitas dewasa (<a href="https://keslan.kemkes.go.id/unduhan/KMK%20No.%20HK.01.07-MENKES-509-2025.pdf" target="_blank" rel="noopener">KMK No. HK.01.07/MENKES/509/2025</a>).
-            WHO global memakai 18,5–24,9.
-          </small>
-        </div>
+
+        <fieldset class="kolom grup">
+          <legend>Cek status dan kebutuhan kalori <span class="opsional">(opsional)</span></legend>
+          <div class="kolom">
+            <label for="berat">Berat badan sekarang:</label>
+            <div class="isian">
+              <input type="number" id="berat" name="berat" min="20" max="300" step="any" inputmode="decimal" aria-describedby="berat-satuan">
+              <span class="satuan" id="berat-satuan">kg</span>
+            </div>
+          </div>
+          <div class="kolom">
+            <label for="aktivitas">Aktivitas harian:</label>
+            <select id="aktivitas" name="aktivitas" aria-describedby="aktivitas-info">
+              <option value="">Pilih aktivitas</option>
+              <option value="jarang">Jarang bergerak</option>
+              <option value="ringan">Ringan (1–3×/minggu)</option>
+              <option value="sedang">Sedang (3–5×/minggu)</option>
+              <option value="berat">Berat (6–7×/minggu)</option>
+              <option value="sangat">Sangat berat</option>
+            </select>
+            <small id="aktivitas-info" class="bantuan">
+              Seberapa sering kamu berolahraga. Pilih “Sangat berat” bila pekerjaanmu banyak kerja fisik
+              atau kamu berlatih dua kali sehari.
+            </small>
+          </div>
+          <div class="kolom">
+            <label for="pinggang">Lingkar pinggang:</label>
+            <div class="isian">
+              <input type="number" id="pinggang" name="pinggang" min="40" max="200" step="any" inputmode="decimal" aria-describedby="pinggang-satuan pinggang-info">
+              <span class="satuan" id="pinggang-satuan">cm</span>
+            </div>
+            <small id="pinggang-info" class="bantuan">
+              Ukur mendatar di tengah antara tulang rusuk terbawah dan puncak tulang panggul, saat membuang napas.
+            </small>
+          </div>
+        </fieldset>
+
+        <details class="kolom pengaturan" id="pengaturan">
+          <summary>Rumus dan standar IMT</summary>
+          <div class="kolom">
+            <label for="formula">Pilih rumus:</label>
+            <select id="formula" name="formula">
+              <option value="imt">Rentang IMT (dianjurkan)</option>
+              <option value="devine">Rumus Devine</option>
+              <option value="robinson">Rumus Robinson</option>
+              <option value="miller">Rumus Miller</option>
+              <option value="hamwi">Rumus Hamwi</option>
+              <option value="lemmens">Rumus Lemmens</option>
+              <option value="broca">Rumus Broca</option>
+              <option value="semua">Semua rumus</option>
+            </select>
+          </div>
+          <div class="kolom">
+            <label for="standar">Standar IMT:</label>
+            <select id="standar" name="standar" aria-describedby="standar-info">
+              <option value="kemenkes2025">Kemenkes 2025</option>
+              <option value="who">WHO global</option>
+            </select>
+            <small id="standar-info" class="bantuan">
+              Kemenkes 2025 memakai klasifikasi Asia-Pasifik (IMT normal 18,5–22,9) dari pedoman tata laksana
+              obesitas dewasa. WHO global memakai 18,5–24,9.
+            </small>
+          </div>
+        </details>
 
         <noscript>
           <div class="hasil-kartu hasil-kartu--info"><p>Kalkulator ini membutuhkan JavaScript.</p></div>
         </noscript>
         <div id="hasil" aria-live="polite"></div>
+
+        <div id="bagikan" class="bagikan" hidden>
+          <a id="bagikan-wa" class="tombol" href="https://wa.me/" target="_blank" rel="noopener">Bagikan ke WhatsApp</a>
+          <button type="button" id="salin-tautan" class="tombol tombol--kedua">Salin link hasil</button>
+          <p id="status-salin" class="bantuan" role="status"></p>
+        </div>
       </form>
     </main>
 
@@ -78,8 +133,13 @@
         orang berotot besar, dan kondisi medis tertentu; konsultasikan dengan dokter atau ahli gizi.
         Semua perhitungan dilakukan di browser-mu; data yang kamu isi tidak dikirim ke mana pun.
       </small></p>
+      <p class="catatan"><small>
+        Sumber: <a href="https://keslan.kemkes.go.id/unduhan/KMK%20No.%20HK.01.07-MENKES-509-2025.pdf" target="_blank" rel="noopener">KMK No. HK.01.07/MENKES/509/2025</a>
+        (standar IMT, lingkar pinggang, target penurunan, dan defisit kalori) dan BMR Harris-Benedict
+        revisi (Roza &amp; Shizgal, 1984).
+      </small></p>
       ___<br>
-      <small><a href="https://reggarantai.com" target="_blank" rel="noopener">Regga @reggarantai &raquo;</a></small>
+      <small><a href="https://hiravta.co.id" target="_blank" rel="noopener">Regga (HIRAVTA) &raquo;</a></small>
     </footer>
 
     <script src="assets/js/rumus.js"></script>
