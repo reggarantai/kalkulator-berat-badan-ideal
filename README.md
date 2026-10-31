@@ -1,6 +1,13 @@
 # Kalkulator Berat Badan Ideal
 
+[![Tes & deploy](https://github.com/reggarantai/kalkulator-berat-badan-ideal/actions/workflows/pages.yml/badge.svg)](https://github.com/reggarantai/kalkulator-berat-badan-ideal/actions/workflows/pages.yml)
+[![Lisensi MIT](https://img.shields.io/badge/lisensi-MIT-blue)](LICENSE)
+[![Dependency: 0](https://img.shields.io/badge/dependency-0-brightgreen)](#pengembangan)
+[![Demo](https://img.shields.io/badge/demo-live-117a8b)](https://reggarantai.github.io/kalkulator-berat-badan-ideal/)
+
 Kalkulator berat badan ideal untuk orang dewasa Indonesia, lengkap dengan status IMT, target yang realistis, dan kebutuhan kalori. Standarnya mengikuti pedoman Kemenkes 2025 (klasifikasi Asia-Pasifik), dengan enam rumus klasik sebagai pembanding: Devine, Robinson, Miller, Hamwi, Lemmens, dan Broca.
+
+> **In English:** An ideal body weight calculator for Indonesian adults, following the 2025 BMI standard of Indonesia's Ministry of Health (Asia-Pacific cut-offs). It shows BMI status, a realistic weight target, daily calorie needs, a waist-circumference check, and six classic formulas for comparison. Built with plain HTML, CSS, and JavaScript and zero dependencies, it installs as a PWA, works offline, and keeps every calculation in the browser.
 
 **Coba langsung:** https://reggarantai.github.io/kalkulator-berat-badan-ideal/
 
@@ -19,6 +26,23 @@ Kalkulator berat badan ideal untuk orang dewasa Indonesia, lengkap dengan status
 - **Bisa di-install dan dipakai offline** sebagai PWA.
 - **Privat.** Semua dihitung di browser; data yang diisi tidak dikirim ke mana pun.
 - **Tanpa dependency.** HTML, CSS, dan JavaScript murni, tanpa framework, CDN, maupun build.
+
+## Sebelum dan sesudah
+
+Versi pertama (2021, jQuery) dibuat untuk tutorial. Pada 2026 kodenya dirombak total.
+
+| | 2021 | 2026 |
+|---|---|---|
+| Standar IMT | WHO global (normal 18,5–25) | Kemenkes 2025, Asia-Pasifik (normal 18,5–22,9); WHO tetap bisa dipilih |
+| Tinggi di bawah 152,4 cm | Devine, Robinson, Miller, dan Hamwi memberi angka yang sama untuk semua tinggi. Perempuan 145 cm dianggap "ideal" di 53,1 kg, padahal itu IMT 25,3 (obesitas I) | Keempat rumus itu tidak dipakai di bawah 152,4 cm, dan hasil di luar rentang normal diberi tanda |
+| Validasi | Broca bisa negatif (tinggi 90 cm menghasilkan −9 kg); menekan Enter me-reload halaman | Tinggi 120–250 cm, cek umur, dan Enter tidak me-reload |
+| Fitur | Rentang berat ideal | Ditambah status IMT, target realistis, kebutuhan kalori, lingkar pinggang, link hasil, dan mode offline |
+| Dependency | jQuery 3.2.1 dan Bootstrap 4.6 dari CDN | Tidak ada |
+| Unduhan saat dibuka | 252,8 KB dari 3 domain | 35,0 KB dari 1 domain |
+| Aksesibilitas | Zoom diblokir; kontras judul 1,97:1 dan kartu hasil 3,04:1 | Zoom diizinkan, semua input berlabel, hasil diumumkan ke pembaca layar, semua teks lulus WCAG AA |
+| Tes | Belum ada | 16 unit test yang berjalan di CI |
+
+Ukuran unduhan diukur tanpa kompresi saat halaman pertama kali dibuka, tanpa service worker.
 
 ## Standar IMT
 
