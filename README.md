@@ -2,7 +2,7 @@
 
 [![Tes & deploy](https://github.com/reggarantai/kalkulator-berat-badan-ideal/actions/workflows/pages.yml/badge.svg)](https://github.com/reggarantai/kalkulator-berat-badan-ideal/actions/workflows/pages.yml)
 [![Lisensi MIT](https://img.shields.io/badge/lisensi-MIT-blue)](LICENSE)
-[![Dependency: 0](https://img.shields.io/badge/dependency-0-brightgreen)](#pengembangan)
+[![Runtime dependency: 0](https://img.shields.io/badge/runtime_dependency-0-brightgreen)](#pengembangan)
 [![Demo](https://img.shields.io/badge/demo-live-117a8b)](https://reggarantai.github.io/kalkulator-berat-badan-ideal/)
 
 Kalkulator berat badan ideal untuk orang dewasa Indonesia, lengkap dengan status IMT, target yang realistis, dan kebutuhan kalori. Standarnya mengikuti pedoman Kemenkes 2025 (klasifikasi Asia-Pasifik), dengan enam rumus klasik sebagai pembanding: Devine, Robinson, Miller, Hamwi, Lemmens, dan Broca.
@@ -40,7 +40,7 @@ Versi pertama (2021, jQuery) dibuat untuk tutorial. Pada 2026 kodenya dirombak t
 | Dependency | jQuery 3.2.1 dan Bootstrap 4.6 dari CDN | Tidak ada |
 | Unduhan saat dibuka | 252,8 KB dari 3 domain | 35,0 KB dari 1 domain |
 | Aksesibilitas | Zoom diblokir; kontras judul 1,97:1 dan kartu hasil 3,04:1 | Zoom diizinkan, semua input berlabel, hasil diumumkan ke pembaca layar, semua teks lulus WCAG AA |
-| Tes | Belum ada | 16 unit test yang berjalan di CI |
+| Tes | Belum ada | 16 unit test dan 22 tes browser (Playwright) yang berjalan di CI |
 
 Ukuran unduhan diukur tanpa kompresi saat halaman pertama kali dibuka, tanpa service worker.
 
@@ -85,7 +85,7 @@ Hasilnya perkiraan untuk orang dewasa, bukan diagnosis. Tidak berlaku untuk ibu 
 
 ## Pengembangan
 
-Tidak ada dependency dan tidak perlu build. Buka `index.html` langsung di browser.
+Situsnya tidak punya dependency dan tidak perlu build. Buka `index.html` langsung di browser. Playwright hanya dipakai untuk tes browser dan tidak ikut ter-deploy.
 
 ```
 index.html            halaman kalkulator
@@ -96,15 +96,21 @@ assets/js/rumus.js    rumus dan logika murni (tanpa DOM), bisa dipakai ulang
 assets/js/script.js   interaksi form
 assets/img/           ikon dan gambar pratinjau link (OG)
 tests/                unit test (node:test)
+tests/e2e/            tes browser (Playwright) dan server statis untuk tes
+playwright.config.js  konfigurasi tes browser
 ```
 
 Jalankan tes (Node.js 20+):
 
 ```bash
-npm test
+npm test                          # unit test, tanpa instalasi apa pun
+
+npm install                       # sekali saja, untuk tes browser
+npx playwright install chromium
+npm run test:e2e                  # tes browser
 ```
 
-Setiap push ke `main` menjalankan tes lalu men-deploy ke GitHub Pages lewat `.github/workflows/pages.yml`.
+Setiap PR dan push ke `main` menjalankan kedua jenis tes lewat `.github/workflows/pages.yml`. Push ke `main` lalu di-deploy ke GitHub Pages.
 
 ## Latar belakang
 

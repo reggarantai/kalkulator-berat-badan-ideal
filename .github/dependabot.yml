@@ -1,7 +1,11 @@
-# Perbarui versi GitHub Actions di workflow secara otomatis
+# Perbarui versi GitHub Actions dan Playwright secara otomatis
 version: 2
 updates:
   - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: npm
     directory: /
     schedule:
       interval: monthly

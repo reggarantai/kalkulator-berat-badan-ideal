@@ -17,8 +17,23 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          package-manager-cache: false
-      - run: npm test
+          cache: npm
+      - run: npm ci
+      - name: Unit test
+        run: npm test
+      - name: Pasang Chromium untuk tes browser
+        run: npx playwright install --with-deps chromium
+      - name: Tes browser
+        run: npm run test:e2e
+      - name: Simpan laporan tes browser
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: laporan-tes-browser
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
   deploy:
     needs: tes
