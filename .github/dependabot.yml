@@ -1,0 +1,7 @@
+# Perbarui versi GitHub Actions di workflow secara otomatis
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
