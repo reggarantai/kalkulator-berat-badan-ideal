@@ -1,5 +1,5 @@
 // Author: Regga @reggarantai
-// https://reggarantai.com
+// https://hiravta.co.id
 
 (function () {
   'use strict';

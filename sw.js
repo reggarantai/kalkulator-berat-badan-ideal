@@ -1,5 +1,5 @@
 // Author: Regga @reggarantai
-// https://reggarantai.com
+// https://hiravta.co.id
 
 // Service worker: simpan file situs supaya kalkulator tetap bisa dibuka tanpa internet.
 // Naikkan versi CACHE kalau daftar FILE berubah.

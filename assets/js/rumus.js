@@ -1,5 +1,5 @@
 // Author: Regga @reggarantai
-// https://reggarantai.com
+// https://hiravta.co.id
 
 // Rumus berat badan ideal untuk orang dewasa.
 // File ini tidak menyentuh DOM, jadi bisa dites di Node dan dipakai ulang.
