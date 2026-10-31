@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "description": "Kalkulator berat badan ideal untuk orang dewasa Indonesia, sesuai standar IMT Kemenkes 2025.",
+  "author": "Regga Rantai (https://hiravta.co.id)",
   "license": "MIT",
   "scripts": {
     "test": "node --test"
