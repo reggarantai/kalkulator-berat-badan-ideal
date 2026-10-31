@@ -1,21 +1,57 @@
+/* Dasar */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
 body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 1rem;
+  line-height: 1.5;
   background: #f4f4f4;
   color: #61686e;
 }
+h1,
+h2,
+p {
+  margin: 0 0 1rem;
+}
+h1,
+h2 {
+  line-height: 1.2;
+}
 h1 {
-  color: #b0b0b0;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
   font-weight: bold;
   text-shadow: 1px 1px 0 #fff;
 }
 a {
-  color: #6194cb;
-  transition: all 0.25s ease-in-out;
+  color: #3b6593;
+  text-underline-offset: 2px;
+  transition: color 0.25s ease-in-out;
 }
 a:hover {
-  color: #4b75a2;
+  color: #2c4f75;
 }
+small {
+  font-size: 80%;
+}
+input,
+select {
+  margin: 0;
+  font: inherit;
+}
+
+/* Tata letak */
 .container {
-  max-width: 640px
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 header.container {
   margin-top: 2rem;
@@ -23,6 +59,13 @@ header.container {
 footer.container {
   margin-bottom: 2rem;
 }
+.subjudul {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Form */
 #form {
   background: #eee;
   border: 1px solid #ddd;
@@ -30,30 +73,142 @@ footer.container {
   padding-bottom: 0;
   margin: 2rem 0
 }
-.form-group {
-  margin-bottom: 2rem
+.kolom {
+  min-width: 0;
+  margin: 0 0 2rem;
+  padding: 0;
+  border: 0;
 }
-.form-group label {
+.kolom > label,
+.kolom > legend {
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0;
   font-weight: 500;
 }
-.form-control:focus {
-  border-color: #c7c5d6;
-  box-shadow: inset 0 0 5px rgb(0 0 0 / 20%)
+.kolom > .pilihan {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  margin: 0 0.75rem 0 0;
+  font-weight: normal;
 }
-#hasil > div {
-  background: #fff;
+.pilihan input {
+  margin: 0;
+  accent-color: #117a8b;
+}
+input[type="number"],
+select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #7b828a;
+  border-radius: 0.3rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+input[type="number"]:focus,
+select:focus {
+  outline: 0;
+  border-color: #117a8b;
+  box-shadow: 0 0 0 0.2rem rgb(17 122 139 / 50%);
+}
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23495057' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
+}
+
+/* Input dengan satuan di kanannya */
+.isian {
+  display: flex;
+}
+.isian input {
+  flex: 1 1 auto;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.isian input:focus {
+  position: relative;
+  z-index: 1;
+}
+.satuan {
+  display: flex;
+  align-items: center;
+  margin-left: -1px;
+  padding: 0.375rem 0.75rem;
+  color: #495057;
+  background: #e9ecef;
+  border: 1px solid #7b828a;
+  border-radius: 0 0.3rem 0.3rem 0;
+}
+.bantuan {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Kartu hasil */
+.hasil-kartu {
   border: 1px solid #ccc;
   padding: 2rem;
   margin-bottom: 1rem;
   box-shadow: inset 0 0 10px rgb(0 0 0 / 30%);
+  animation: muncul 0.25s ease-out;
 }
-#hasil > div:last-child {
+#hasil > .hasil-kartu:last-child {
   margin-bottom: 2rem;
 }
-#hasil > div p {
-  opacity: 0.9;
+.hasil-kartu h2 {
+  font-size: 1rem;
+  font-weight: 500;
   margin-bottom: 0.4rem;
 }
-#hasil > div h3 {
-  opacity: 0.95;
+.hasil-kartu p {
+  margin-bottom: 0.4rem;
+}
+.hasil-kartu p:last-child {
+  margin-bottom: 0;
+}
+.hasil-utama {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.hasil-kartu--utama {
+  background: #117a8b;
+  color: #fff;
+}
+.hasil-kartu--peringatan {
+  background: #fff3cd;
+  color: #664d03;
+}
+.hasil-kartu--nonaktif {
+  background: #e9ecef;
+  color: #495057;
+}
+.hasil-kartu--info {
+  background: #fff;
+  color: #495057;
+}
+.catatan {
+  margin-bottom: 0.5rem;
+}
+
+@keyframes muncul {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hasil-kartu {
+    animation: none;
+  }
+  a {
+    transition: none;
+  }
 }
